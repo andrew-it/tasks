@@ -27,7 +27,7 @@ namespace ConsoleAppChallenge
                 double price;
                 if (!Double.TryParse(v2.products[productsKey].price, out price))
                 {
-                    var value = evaluator.EvalStringWithVarsDouble(v2.products[productsKey].price, v2.constants);
+                    var value = evaluator.EvalStringWithVarsToDouble(v2.products[productsKey].price, v2.constants);
                     price = Math.Round(value, 2);
                 }
 
@@ -69,21 +69,21 @@ namespace ConsoleAppChallenge
             }";
 
         const string v3_01 = @"{
-	            'version': '3',
+                'version': '3',
                 'products': [
                 {
-			        'id': 1,
-			        'name': 'Pen',
-			        'price': 12,
-			        'count': 100
+                    'id': 1,
+                    'name': 'Pen',
+                    'price': 12,
+                    'count': 100
                 },
-		        {
-			        'id': 2,
-			        'name': 'Pencil',
-			        'price': 8,
-			        'count': 1000
-		        }
-	            ]
+                {
+                    'id': 2,
+                    'name': 'Pencil',
+                    'price': 8,
+                    'count': 1000
+                }
+                ]
              }";
 
         private const string v2_02 = @"{

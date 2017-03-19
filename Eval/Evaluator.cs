@@ -54,7 +54,7 @@ namespace EvalTask
             return EvalStringWithVars(input, vars);
         }
 
-        public string EvalStringWithVars(string input, Dictionary<string, double> vars)
+        public double EvalStringWithVarsToDouble(string input, Dictionary<string, double> vars)
         {
             // HACK
             var newVars = new Dictionary<string, double>();
@@ -97,7 +97,13 @@ namespace EvalTask
 
             var expr = calc.ParseExpression(normalInput, newVars);
             var func = expr.Compile();
-            return func().ToString(CultureInfo.InvariantCulture);
+            return func();
+        }
+
+        public string EvalStringWithVars(string input, Dictionary<string, double> vars)
+        {
+            return EvalStringWithVarsToDouble(input, vars)
+                .ToString(CultureInfo.InvariantCulture);
         }
     }
 }
