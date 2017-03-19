@@ -5,8 +5,6 @@
       <sourceFolder url="file://$MODULE_DIR$/../../Eval" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/../../JsonConversion" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/../../SimQL" isTestSource="false" />
-      <excludeFolder url="file://$MODULE_DIR$/../../Eval/bin" />
-      <excludeFolder url="file://$MODULE_DIR$/../../Eval/obj" />
       <excludeFolder url="file://$MODULE_DIR$/../../JsonConversion/bin" />
       <excludeFolder url="file://$MODULE_DIR$/../../JsonConversion/obj" />
       <excludeFolder url="file://$MODULE_DIR$/../../SimQL/bin" />
