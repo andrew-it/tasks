@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
+using NUnit.Framework;
 
 namespace JsonConversion
 {
@@ -14,4 +15,15 @@ namespace JsonConversion
 			Console.Write(v3);
 		}
 	}
+
+
+    [TestFixture]
+    public class JsonProgram_Should
+    {
+        [Test]
+        public void ConvertToV3_WhenRecivingV2()
+        {
+
+        }
+    }
 }
