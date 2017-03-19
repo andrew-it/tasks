@@ -102,8 +102,8 @@ namespace ConsoleAppChallenge
         }";
 
 
-        [TestCase(v2_01, v2_01)]
-        [TestCase(v2_02, v2_02)]
+        [TestCase(v2_01, v3_01)]
+        [TestCase(v2_02, v3_02)]
         public void ConvertV2toV3(string v2, string v3)
         {
             var expected = JsonConvert.DeserializeObject<JsonVer3>(v3);
