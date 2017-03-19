@@ -8,6 +8,6 @@ namespace ConsoleAppChallenge
 {
     public class JsonVerX
     {
-        public virtual int version { get; }
+        public virtual string version { get; }
     }
 }
