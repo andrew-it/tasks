@@ -19,7 +19,8 @@ namespace EvalTask
             } else if (lines.Length == 2)
 		    {
 		        var formula = lines[0];
-		        var jsonData = String.Join("", lines.Skip(1));
+		        var jsonData = String.Join("\r\n", lines.Skip(1));
+               
                 output = evaluator.evalStringWithVarsAsJson(formula, jsonData);
             }
             
