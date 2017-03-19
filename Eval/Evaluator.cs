@@ -49,7 +49,7 @@ namespace EvalTask
         private string evalStringWithVars(string input, Dictionary<string, double> vars)
         {
             // HACK
-            var expr = calc.ParseExpression(input.Replace("_", "SUPER"), vars);
+            var expr = calc.ParseExpression(input.Replace("_", "SUPER").Replace(",", "."), vars);
             var func = expr.Compile();
             return func().ToString();
         }

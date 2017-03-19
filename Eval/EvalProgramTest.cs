@@ -19,6 +19,12 @@ namespace EvalTask
             evaluator.evalString("2 + 3").Should().Be("5");
         }
 
+        [Test]
+        public void EvalProgram_TwoPlusThreeWithCommas()
+        {
+            evaluator.evalString("2,3 + 3,2").Should().Be("5.5");
+        }
+
 
         [Test]
         public void EvalProgram_ComplexFormula()
