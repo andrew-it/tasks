@@ -1,8 +1,9 @@
-﻿﻿using System;
+﻿﻿﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
@@ -13,7 +14,15 @@ namespace EvalTask
 {
     public class Evaluator
     {
-        XtensibleCalculator calc = new XtensibleCalculator();
+        private XtensibleCalculator calc;
+
+        public Evaluator()
+        {
+            calc = new XtensibleCalculator();
+            calc.RegisterFunction("sqrt", Math.Sqrt);
+            calc.RegisterFunction("min", Math.Min);
+            calc.RegisterFunction("max", Math.Max);
+        }
 
         public string EvalString(string input)
         {
@@ -45,7 +54,7 @@ namespace EvalTask
             return EvalStringWithVars(input, vars);
         }
 
-        public double EvalStringWithVarsDouble(string input, Dictionary<string, double> vars)
+        public string EvalStringWithVars(string input, Dictionary<string, double> vars)
         {
             // HACK
             var newVars = new Dictionary<string, double>();
@@ -54,16 +63,41 @@ namespace EvalTask
                 newVars[item.Key.Replace("_", "SUPER")] = item.Value;
             }
 
-            var expr = calc.ParseExpression(input.Replace("_", "SUPER").Replace(",", "."), newVars);
-            var func = expr.Compile();
-            return func();
-        }
+            var newInput = input.Replace("_", "SUPER").Replace("'", "");
 
-        public string EvalStringWithVars(string input, Dictionary<string, double> vars)
-        {
-            return
-                EvalStringWithVarsDouble(input, vars)
-                .ToString(CultureInfo.InvariantCulture);
+            var normalInput = "";
+
+            bool inParens = false;
+            foreach (char c in newInput)
+            {
+                if (c == '(')
+                {
+                    inParens = true;
+                }
+
+                if (c == ')')
+                {
+                    inParens = false;
+                }
+
+                if (inParens && c == ';')
+                {
+                    normalInput += ',';
+                    continue;
+                }
+
+                if (!inParens && c == ',')
+                {
+                    normalInput += '.';
+                    continue;
+                }  
+            
+                normalInput += c;
+            }
+
+            var expr = calc.ParseExpression(normalInput, newVars);
+            var func = expr.Compile();
+            return func().ToString(CultureInfo.InvariantCulture);
         }
     }
 }
