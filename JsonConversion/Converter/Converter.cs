@@ -12,7 +12,6 @@ namespace ConsoleAppChallenge
     }
 
 
-
     public class JsonConverter : IJsonConverter
     {
         public JsonVer3 ConvertV2toV3(JsonVer2 v2)
@@ -28,32 +27,31 @@ namespace ConsoleAppChallenge
                 double price;
                 if (!Double.TryParse(v2.products[productsKey].price, out price))
                 {
-                    price = Double.Parse(evaluator.EvalStringWithVars(v2.products[productsKey].price, v2.constants));
+                    var value = evaluator.EvalStringWithVars(v2.products[productsKey].price, v2.constants);
+                    price = Math.Round(value, 2);
                 }
 
                 jsonV3.products[count] = new ProductWithId
-                    {
-                        id = int.Parse(productsKey),
-                        name = v2.products[productsKey].name,
+                {
+                    id = int.Parse(productsKey),
+                    name = v2.products[productsKey].name,
 
-                        price = price,
-                        count = v2.products[productsKey].count
-                    };
+                    price = price,
+                    count = v2.products[productsKey].count
+                };
 
 
                 count++;
-                }
-
-                return jsonV3;
             }
-        }
 
+            return jsonV3;
+        }
+    }
 
 
     [TestFixture]
     public class JsonConverter_Should
     {
-
         const string v2_01 = @"{
                 'version': '2',
                 'products': {
@@ -113,9 +111,33 @@ namespace ConsoleAppChallenge
             ]
         }";
 
+        private const string v2_03 = @"{
+            'version': '3',
+            'products': [
+            {
+                'id': 1,
+                'name': 'product-name',
+                'price': 45.76,
+                'count': 100
+            }
+            ]
+        }";
+
+        private const string v3_03 = @"{
+            'version':'2',
+            'constants':{'pi':3.14},
+            'products':{
+                '1':{
+                'name':'product-name',
+                'price':'12.3 * pi + pi + 4',
+                'count':100
+                }
+            }
+        }";
 
         [TestCase(v2_01, v3_01)]
         [TestCase(v2_02, v3_02)]
+        [TestCase(v2_03, v3_03)]
         public void ConvertV2toV3(string v2, string v3)
         {
             var expected = JsonConvert.DeserializeObject<JsonVer3>(v3);
@@ -126,9 +148,5 @@ namespace ConsoleAppChallenge
 
             JsonConvert.SerializeObject(resolut).Should().Be(JsonConvert.SerializeObject(expected));
         }
-
     }
 }
-
-
-
