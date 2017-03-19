@@ -30,7 +30,17 @@ namespace SimQLTask
             var steps = query.Split('.');
             var result = data[steps[0]];
             for (var i = 1; i < steps.Length; i++)
-                result = result[steps[i]];
+            {
+                try
+                {
+                    result = result[steps[i]];
+                }
+                catch (Exception e)
+                {
+                    return null;
+                }
+                
+            }
             return result?.ToString(Formatting.Indented);
         }
         
@@ -55,8 +65,12 @@ namespace SimQLTask
                                                 ]
                                             }";
 
-       
-        [TestCase(jsonData, new[] {"a.b.c = 15", "z = 42", "a.x = 3.14"})]
+        private const string jsonData2 =
+            @"{""data"":{""empty"":{},""ab"":0,""x1"":1,""x2"":2,""y1"":{""y2"":{""y3"":3}}},
+                ""queries"":[""empty"",""xyz"",""x1.x2"",""y1.y2.z"",""empty.foobar""]}";
+
+        [TestCase(jsonData, new[] {"a.b.c = 15", "z = 42", "a.x = 3.14"}, TestName = "good")]
+        [TestCase(jsonData2, new[] {"empty = ", "xyz = null", "x1.x2 = null", "y1.y2.z = null", "empty.foobar = null" }, TestName = "bad")]
         public void GetValue_ByQuery(string query, IEnumerable<string> result)
         {
             SimQLProgram.ExecuteQueries(query)
