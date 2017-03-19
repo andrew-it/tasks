@@ -33,6 +33,7 @@ namespace SimQLTask
                 result = result[steps[i]];
             return result?.ToString(Formatting.Indented);
         }
+        
     }
 
     [TestFixture]
@@ -54,9 +55,7 @@ namespace SimQLTask
                                                 ]
                                             }";
 
-        private const string jsonData2 =
-            @"{'data':{'empty':{},'ab':0,'x1':1,'x2':2,'y1':{'y2':{'y3':3}}},'queries':['empty','xyz','x1.x2','y1.y2.z','empty.foobar']}";
-
+       
         [TestCase(jsonData, new[] {"a.b.c = 15", "z = 42", "a.x = 3.14"})]
         public void GetValue_ByQuery(string query, IEnumerable<string> result)
         {
@@ -68,10 +67,17 @@ namespace SimQLTask
         [TestCase("xyz", "{'empty':{},'ab':0,'x1':1,'x2':2,'y1':{'y2':{'y3':3}}}", ExpectedResult = null)]
         [TestCase("y1.y2.z", "{'empty':{},'ab':0,'x1':1,'x2':2,'y1':{'y2':{'y3':3}}}", ExpectedResult = null)]
         [TestCase("empty.foobar", "{'empty':{},'ab':0,'x1':1,'x2':2,'y1':{'y2':{'y3':3}}}", ExpectedResult = null)]
-        public string GetValue(string query, string data)
+        public string GetValue_ByErrorQuery(string query, string data)
         {
             var d = JObject.Parse(data);
             return SimQLProgram.GetResultByQuery(query, d);
+        }
+
+        [TestCase("sum(a.b.c)", "{'a':{'x':3.14, 'b':[{'c':15}, {'c':9}]}, 'z':[2.65, 35]}", ExpectedResult = 24) ]
+        public void GetValue_ByAgregateQuery(string query, string data)
+        {
+            var d = JObject.Parse(data);
+            
         }
     }
 }
