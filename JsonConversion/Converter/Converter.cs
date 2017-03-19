@@ -1,7 +1,8 @@
-﻿using EvalTask;
-using FluentAssertions;
+﻿using System;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NUnit.Framework;
+using FluentAssertions;
 
 namespace ConsoleAppChallenge
 {
@@ -17,20 +18,24 @@ namespace ConsoleAppChallenge
         {
             var jsonV3 = new JsonVer3();
             jsonV3.products = new ProductWithId[v2.products.Count];
-            var evaluator = new Evaluator();
+            var evaluator = new EvalTask.Evaluator();
 
             var count = 0;
 
             foreach (var productsKey in v2.products.Keys)
             {
                 double price;
-                if (!double.TryParse(v2.products[productsKey].price, out price))
-                    price = double.Parse(evaluator.EvalStringWithVars(v2.products[productsKey].price, v2.constants));
+                if (!Double.TryParse(v2.products[productsKey].price, out price))
+                {
+                    var value = evaluator.EvalStringWithVarsToDouble(v2.products[productsKey].price, v2.constants);
+                    price = Math.Round(value, 2);
+                }
 
                 jsonV3.products[count] = new ProductWithId
                 {
                     id = int.Parse(productsKey),
                     name = v2.products[productsKey].name,
+
                     price = price,
                     count = v2.products[productsKey].count
                 };
@@ -47,7 +52,7 @@ namespace ConsoleAppChallenge
     [TestFixture]
     public class JsonConverter_Should
     {
-        private const string v2_01 = @"{
+        const string v2_01 = @"{
                 'version': '2',
                 'products': {
                     '1': {
@@ -63,7 +68,7 @@ namespace ConsoleAppChallenge
                 }
             }";
 
-        private const string v3_01 = @"{
+        const string v3_01 = @"{
                 'version': '3',
                 'products': [
                 {
@@ -106,9 +111,33 @@ namespace ConsoleAppChallenge
             ]
         }";
 
+        private const string v3_03 = @"{
+            'version': '3',
+            'products': [
+            {
+                'id': 1,
+                'name': 'product-name',
+                'price': 45.76,
+                'count': 100
+            }
+            ]
+        }";
+
+        private const string v2_03 = @"{
+            'version':'2',
+            'constants':{'pi':3.14},
+            'products':{
+                '1':{
+                'name':'product-name',
+                'price':'12.3 * pi + pi + 4',
+                'count':100
+                }
+            }
+        }";
 
         [TestCase(v2_01, v3_01)]
         [TestCase(v2_02, v3_02)]
+        [TestCase(v2_03, v3_03)]
         public void ConvertV2toV3(string v2, string v3)
         {
             var expected = JsonConvert.DeserializeObject<JsonVer3>(v3);
