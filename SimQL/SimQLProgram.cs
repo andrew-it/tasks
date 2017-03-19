@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using FluentAssert;
+using FluentAssertions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
@@ -62,7 +61,7 @@ namespace SimQLTask
         public void GetValue_ByQuery(string query, IEnumerable<string> result)
         {
             SimQLProgram.ExecuteQueries(query)
-                .ShouldBeEqualTo(result);
+                .ShouldBeEquivalentTo(result);
         }
     }
 }
