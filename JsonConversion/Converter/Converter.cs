@@ -4,11 +4,18 @@ using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using FluentAssertions;
 
-namespace JsonConversion
+namespace ConsoleAppChallenge
 {
-    public static class JsonConverter
+    public interface IJsonConverter
     {
-        public static JObject ConvertV2toV3(JObject v2)
+        JsonVer3 ConvertV2toV3(JsonVer2 v2);
+    }
+
+
+
+    public class JsonConverter : IJsonConverter
+    {
+        public JsonVer3 ConvertV2toV3(JsonVer2 v2)
         {
             throw new NotImplementedException();
         }
@@ -18,7 +25,11 @@ namespace JsonConversion
     [TestFixture]
     public class JsonConverter_Should
     {
-        const string v2 = @"{
+
+        [Test]
+        public void ConvertV2toV3()
+        {
+            const string v2 = @"{
                 'version': '2',
                 'products': {
                     '1': {
@@ -34,7 +45,7 @@ namespace JsonConversion
                 }
             }";
 
-        const string v3 = @"{
+            const string v3 = @"{
 	            'version': '3',
                 'products': [
                 {
@@ -53,15 +64,13 @@ namespace JsonConversion
              }";
 
 
-        [TestCase(v2, v3)]
-        public void ConvertV2toV3(string input, string expected)
-        {
-            var v2 = JObject.Parse(input);
-            var expected_v3 = JObject.Parse(expected);
+            var expected = JsonConvert.DeserializeObject<JsonVer3>(v3);
+            var version2 = JsonConvert.DeserializeObject<JsonVer2>(v2);
 
-            var v3 = JsonConverter.ConvertV2toV3(v2);
+            var converter = new JsonConverter();
+            var resolut = converter.ConvertV2toV3(version2);
 
-            v3.Should().Equal(expected_v3);
+            resolut.Should().Be(expected);
         }
     }
 }

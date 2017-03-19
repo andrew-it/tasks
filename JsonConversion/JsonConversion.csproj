@@ -58,7 +58,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="JsonConverter.cs" />
+    <Compile Include="Converter\Converter.cs" />
     <Compile Include="JsonDocuments\JsonVer2.cs" />
     <Compile Include="JsonDocuments\JsonVer3.cs" />
     <Compile Include="JsonDocuments\JsonVerX.cs" />

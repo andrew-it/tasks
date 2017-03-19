@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ConsoleAppChallenge
 {
-    class Product
+    public class Product
     {
         public string name { get; set; }
         public double price { get; set; }

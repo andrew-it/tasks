@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace ConsoleAppChallenge
 {
-
-    class JsonVer3 : JsonVerX
+    public class JsonVer3 : JsonVerX
     {
         public override int version => 3;
 

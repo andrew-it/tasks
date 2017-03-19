@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ConsoleAppChallenge
 {
-    class JsonVer2 : JsonVerX
+    public class JsonVer2 : JsonVerX
     {
         public Dictionary<string, Product> products { get; set; }
     }

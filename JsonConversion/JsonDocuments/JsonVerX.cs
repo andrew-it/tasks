@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ConsoleAppChallenge
 {
-    class JsonVerX
+    public class JsonVerX
     {
         public virtual int version { get; }
     }
