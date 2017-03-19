@@ -8,6 +8,8 @@ namespace ConsoleAppChallenge
 {
     public class JsonVer2 : JsonVerX
     {
+        public override int version => 2;
+
         public Dictionary<string, Product> products { get; set; }
     }
 }

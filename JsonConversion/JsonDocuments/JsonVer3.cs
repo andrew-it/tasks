@@ -10,7 +10,7 @@ namespace ConsoleAppChallenge
     {
         public override int version => 3;
 
-        public Product[] products { get; set; }
+        public ProductWithId[] products { get; set; }
     }
 
 }

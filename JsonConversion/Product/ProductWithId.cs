@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ConsoleAppChallenge
 {
-    class ProductWithId : Product
+    public class ProductWithId : Product
     {
         public int id { get; set; }
     }
