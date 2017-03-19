@@ -25,5 +25,18 @@ namespace EvalTask
         {
             evaluator.evalString("2 + 3 * 12 / (1 + (55 / 11))").Should().Be("8");
         }
+
+        [Test]
+        public void EvalProgram_FormulaWithVariables()
+        {
+            evaluator.evalStringWithVarsAsJson("2 + 2 * x", "{'x': 3.5}").Should().Be("9");
+        }
+
+        [Test]
+        public void EvalProgram_FormulaWithVar()
+        {
+            evaluator.evalStringWithVarsAsJson("b", "{\"a\": 1,\r\n" +
+                                                    " \"b\": 2}").Should().Be("2");
+        }
     }
 }
