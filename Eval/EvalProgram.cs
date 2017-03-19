@@ -9,7 +9,7 @@ namespace EvalTask
 		{
             Evaluator evaluator = new Evaluator();;
 			string input = Console.In.ReadToEnd();
-            var lines = input.Split("\n\r".ToCharArray());
+            var lines = input.Split("\n".ToCharArray());
 
 		    string output = "";
 
@@ -19,7 +19,7 @@ namespace EvalTask
             } else if (lines.Length == 2)
 		    {
 		        var formula = lines[0];
-		        var jsonData = String.Join("\r\n", lines.Skip(1));
+		        var jsonData = String.Join("\n", lines.Skip(1));
                
                 output = evaluator.evalStringWithVarsAsJson(formula, jsonData);
             }
