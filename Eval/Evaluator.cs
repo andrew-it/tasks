@@ -80,6 +80,12 @@ namespace EvalTask
                     inParens = false;
                 }
 
+                if (inParens && c == ';')
+                {
+                    normalInput += ',';
+                    continue;
+                }
+
                 if (!inParens && c == ',')
                 {
                     normalInput += '.';

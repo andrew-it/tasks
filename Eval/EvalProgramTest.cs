@@ -38,9 +38,15 @@ namespace EvalTask
         }
 
         [Test]
+        public void EvalProgram_SqrtOne()
+        {
+            evaluator.EvalString("sqrt(1)").Should().Be("1");
+        }
+
+        [Test]
         public void EvalProgram_Max()
         {
-            evaluator.EvalString("2.2 * max(3, 4) * 2.5").Should().Be("22");
+            evaluator.EvalString("2.2 * max(3; 4) * 2.5").Should().Be("22");
         }
 
         [Test]
