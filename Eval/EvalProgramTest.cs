@@ -38,5 +38,12 @@ namespace EvalTask
             evaluator.evalStringWithVarsAsJson("b", "{\"a\": 1,\r\n" +
                                                     " \"b\": 2}").Should().Be("2");
         }
+
+        [Test]
+        public void EvalProgram_FormulaWithVarWithUnderscore()
+        {
+            evaluator.evalStringWithVarsAsJson("b_", "{\"a\": 1,\r\n" +
+                                                    " \"b_\": 2}").Should().Be("2");
+        }
     }
 }
