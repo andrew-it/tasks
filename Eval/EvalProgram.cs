@@ -8,7 +8,20 @@ namespace EvalTask
 		{
             Evaluator evaluator = new Evaluator();;
 			string input = Console.In.ReadToEnd();
-			string output = evaluator.evalString(input);
+            var lines = input.Split("\n\r".ToCharArray());
+
+		    string output = "";
+
+		    if (lines.Length == 1)
+		    {
+                output = evaluator.evalString(input);
+            } else if (lines.Length == 2)
+		    {
+		        var formula = lines[0];
+		        var jsonData = lines[1];
+                output = evaluator.evalStringWithVarsAsJson(formula, jsonData);
+            }
+            
 			Console.WriteLine(output);
 		}
 	}

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FluentAssertions;
-using NUnit;
+﻿using FluentAssertions;
 using NUnit.Framework;
 
 namespace EvalTask
@@ -30,6 +24,12 @@ namespace EvalTask
         public void EvalProgram_ComplexFormula()
         {
             evaluator.evalString("2 + 3 * 12 / (1 + (55 / 11))").Should().Be("8");
+        }
+
+        [Test]
+        public void EvalProgram_FormulaWithVariables()
+        {
+            evaluator.evalStringWithVarsAsJson("2 + 2 * x", "{'x': 3.5}").Should().Be("9");
         }
     }
 }
