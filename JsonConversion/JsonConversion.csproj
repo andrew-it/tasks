@@ -59,7 +59,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="JsonConverter.cs" />
+    <Compile Include="JsonDocuments\JsonVer2.cs" />
+    <Compile Include="JsonDocuments\JsonVer3.cs" />
+    <Compile Include="JsonDocuments\JsonVerX.cs" />
     <Compile Include="JsonProgram.cs" />
+    <Compile Include="Product\Product.cs" />
+    <Compile Include="Product\ProductWithId.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

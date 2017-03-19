@@ -9,6 +9,8 @@ namespace ConsoleAppChallenge
 
     class JsonVer3 : JsonVerX
     {
+        public override int version => 3;
+
         public Product[] products { get; set; }
     }
 
