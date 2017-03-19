@@ -11,7 +11,7 @@ namespace EvalTask
 {
     using Newtonsoft.Json;
 
-    class Evaluator
+    public class Evaluator
     {
         XtensibleCalculator calc = new Sprache.Calc.XtensibleCalculator();
 
@@ -36,7 +36,7 @@ namespace EvalTask
             return evalStringWithVars(input, vars);
         }
 
-        private string evalStringWithVars(string input, Dictionary<string, double> vars)
+        public string evalStringWithVars(string input, Dictionary<string, double> vars)
         {
             var expr = calc.ParseExpression(input, vars);
             var func = expr.Compile();

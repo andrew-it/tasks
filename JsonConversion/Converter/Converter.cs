@@ -19,23 +19,35 @@ namespace ConsoleAppChallenge
         {
             var jsonV3 = new JsonVer3();
             jsonV3.products = new ProductWithId[v2.products.Count];
+            var evaluator = new EvalTask.Evaluator();
 
-            int count = 0;
+            var count = 0;
+
             foreach (var productsKey in v2.products.Keys)
             {
-                jsonV3.products[count] = new ProductWithId
+                double price;
+                if (!Double.TryParse(v2.products[productsKey].price, out price))
                 {
-                    id = int.Parse(productsKey),
-                    name = v2.products[productsKey].name,
-                    price = v2.products[productsKey].price,
-                    count = v2.products[productsKey].count
-                };
-                count++;
-            }
+                    price = Double.Parse(evaluator.evalStringWithVars(v2.products[productsKey].price, v2.constants));
+                }
 
-            return jsonV3;
+                jsonV3.products[count] = new ProductWithId
+                    {
+                        id = int.Parse(productsKey),
+                        name = v2.products[productsKey].name,
+
+                        price = price,
+                        count = v2.products[productsKey].count
+                    };
+
+
+                count++;
+                }
+
+                return jsonV3;
+            }
         }
-    }
+
 
 
     [TestFixture]
@@ -103,17 +115,14 @@ namespace ConsoleAppChallenge
 
 
         [TestCase(v2_01, v3_01)]
-      //  [TestCase(v2_02, v3_02)]
+        [TestCase(v2_02, v3_02)]
         public void ConvertV2toV3(string v2, string v3)
         {
             var expected = JsonConvert.DeserializeObject<JsonVer3>(v3);
             var version2 = JsonConvert.DeserializeObject<JsonVer2>(v2);
 
- 
             var converter = new JsonConverter();
             var resolut = converter.ConvertV2toV3(version2);
-
-           //resolut.Should().Be(expected);
 
             JsonConvert.SerializeObject(resolut).Should().Be(JsonConvert.SerializeObject(expected));
         }
