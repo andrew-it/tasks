@@ -28,7 +28,7 @@ namespace ConsoleAppChallenge
                 double price;
                 if (!Double.TryParse(v2.products[productsKey].price, out price))
                 {
-                    price = Double.Parse(evaluator.evalStringWithVars(v2.products[productsKey].price, v2.constants));
+                    price = Double.Parse(evaluator.EvalStringWithVars(v2.products[productsKey].price, v2.constants));
                 }
 
                 jsonV3.products[count] = new ProductWithId
