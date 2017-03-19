@@ -17,9 +17,18 @@ namespace EvalTask
 
         public string evalString(string input)
         {
-            var expr = calc.ParseExpression(input);
-            var func = expr.Compile();
-            return func().ToString();
+            var lines = input.Split("\r\n".ToCharArray());
+
+            if (lines.Length == 1)
+            {
+                return evalStringWithVars(input, new Dictionary<string, double>());
+            }
+
+            var formula = lines[0];
+            var jsonData = String.Join("\r\n", lines.Skip(1));
+
+            return evalStringWithVarsAsJson(formula, jsonData);
+            
         }
 
         public string evalStringWithVarsAsJson(string input, string data)
@@ -30,7 +39,8 @@ namespace EvalTask
 
             foreach (var prop in obj.Properties())
             {
-                vars[prop.Name] = double.Parse(prop.Value.ToString());
+                // HACK
+                vars[prop.Name.Replace("_", "SUPER")] = double.Parse(prop.Value.ToString());
             }
 
             return evalStringWithVars(input, vars);
@@ -38,7 +48,8 @@ namespace EvalTask
 
         private string evalStringWithVars(string input, Dictionary<string, double> vars)
         {
-            var expr = calc.ParseExpression(input, vars);
+            // HACK
+            var expr = calc.ParseExpression(input.Replace("_", "SUPER"), vars);
             var func = expr.Compile();
             return func().ToString();
         }
