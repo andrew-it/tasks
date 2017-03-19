@@ -26,10 +26,7 @@ namespace ConsoleAppChallenge
     public class JsonConverter_Should
     {
 
-        [Test]
-        public void ConvertV2toV3()
-        {
-            const string v2 = @"{
+        const string v2_01 = @"{
                 'version': '2',
                 'products': {
                     '1': {
@@ -45,7 +42,7 @@ namespace ConsoleAppChallenge
                 }
             }";
 
-            const string v3 = @"{
+        const string v3_01 = @"{
 	            'version': '3',
                 'products': [
                 {
@@ -63,7 +60,36 @@ namespace ConsoleAppChallenge
 	            ]
              }";
 
+        private const string v2_02 = @"{
+            'version': '2',
+            'constants': { 'a': 3, 'b': 4 },
+            'products':
+            {
+                '1': {
+                    'name': 'product-name',
+                    'price': '3 + a + b',
+                    'count': 100,
+                }
+            }
+        }";
 
+        private const string v3_02 = @"{
+            'version': '3',
+            'products': [
+            {
+                'id': 1,
+                'name': 'product-name',
+                'price': 10,
+                'count': 100
+            }
+            ]
+        }";
+
+
+        [TestCase(v2_01, v2_01)]
+        [TestCase(v2_02, v2_02)]
+        public void ConvertV2toV3(string v2, string v3)
+        {
             var expected = JsonConvert.DeserializeObject<JsonVer3>(v3);
             var version2 = JsonConvert.DeserializeObject<JsonVer2>(v2);
 
@@ -72,6 +98,7 @@ namespace ConsoleAppChallenge
 
             resolut.Should().Be(expected);
         }
+
     }
 }
 
