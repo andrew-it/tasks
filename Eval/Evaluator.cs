@@ -65,6 +65,15 @@ namespace EvalTask
 
             var newInput = input.Replace("_", "SUPER").Replace("'", "");
 
+            var normalInput = NormalizeCommas(newInput);
+
+            var expr = calc.ParseExpression(normalInput, newVars);
+            var func = expr.Compile();
+            return func().ToString(CultureInfo.InvariantCulture).Replace("NaN", "error");
+        }
+
+        private static string NormalizeCommas(string newInput)
+        {
             var normalInput = "";
 
             bool inParens = false;
@@ -90,14 +99,11 @@ namespace EvalTask
                 {
                     normalInput += '.';
                     continue;
-                }  
-            
+                }
+
                 normalInput += c;
             }
-
-            var expr = calc.ParseExpression(normalInput, newVars);
-            var func = expr.Compile();
-            return func().ToString(CultureInfo.InvariantCulture);
+            return normalInput;
         }
     }
 }
