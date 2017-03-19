@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using FluentAssert;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
-
 
 namespace SimQLTask
 {
@@ -24,18 +22,16 @@ namespace SimQLTask
             var jObject = JObject.Parse(json);
             var data = (JObject) jObject["data"];
             var queries = jObject["queries"].ToObject<string[]>();
-            return queries.Select(q => GetResultByQuery(q, data));
+            return queries.Select(q => $"{q} = {GetResultByQuery(q, data)}");
         }
 
         public static string GetResultByQuery(string query, JObject data)
         {
             var steps = query.Split('.');
             var result = data[steps[0]];
-            for (int i = 1; i < steps.Length; i++)
-            {
+            for (var i = 1; i < steps.Length; i++)
                 result = result[steps[i]];
-            }
-            return $"{query} = {result.ToString(Formatting.Indented)}";
+            return result?.ToString(Formatting.Indented);
         }
     }
 
@@ -57,12 +53,25 @@ namespace SimQLTask
                                                     'a.x'
                                                 ]
                                             }";
-       
-    [TestCase(jsonData, new[] { "a.b.c = 15", "z = 42", "a.x = 3.14" })]
+
+        private const string jsonData2 =
+            @"{'data':{'empty':{},'ab':0,'x1':1,'x2':2,'y1':{'y2':{'y3':3}}},'queries':['empty','xyz','x1.x2','y1.y2.z','empty.foobar']}";
+
+        [TestCase(jsonData, new[] {"a.b.c = 15", "z = 42", "a.x = 3.14"})]
         public void GetValue_ByQuery(string query, IEnumerable<string> result)
         {
             SimQLProgram.ExecuteQueries(query)
                 .ShouldBeEqualTo(result);
+        }
+
+        [TestCase("empty", "{'empty':{},'ab':0,'x1':1,'x2':2,'y1':{'y2':{'y3':3}}}", ExpectedResult = "{}")]
+        [TestCase("xyz", "{'empty':{},'ab':0,'x1':1,'x2':2,'y1':{'y2':{'y3':3}}}", ExpectedResult = null)]
+        [TestCase("y1.y2.z", "{'empty':{},'ab':0,'x1':1,'x2':2,'y1':{'y2':{'y3':3}}}", ExpectedResult = null)]
+        [TestCase("empty.foobar", "{'empty':{},'ab':0,'x1':1,'x2':2,'y1':{'y2':{'y3':3}}}", ExpectedResult = null)]
+        public string GetValue(string query, string data)
+        {
+            var d = JObject.Parse(data);
+            return SimQLProgram.GetResultByQuery(query, d);
         }
     }
 }
