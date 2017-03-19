@@ -9,7 +9,7 @@ namespace EvalTask
 		{
             Evaluator evaluator = new Evaluator();;
 			string input = Console.In.ReadToEnd();
-		    string output = evaluator.evalString(input);
+		    string output = evaluator.EvalString(input);
             
 			Console.WriteLine(output);
 		}

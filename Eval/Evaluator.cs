@@ -1,7 +1,9 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using Sprache;
@@ -9,29 +11,27 @@ using Sprache.Calc;
 
 namespace EvalTask
 {
-    using Newtonsoft.Json;
-
     public class Evaluator
     {
-        XtensibleCalculator calc = new Sprache.Calc.XtensibleCalculator();
+        XtensibleCalculator calc = new XtensibleCalculator();
 
-        public string evalString(string input)
+        public string EvalString(string input)
         {
             var lines = input.Split("\r\n".ToCharArray());
 
             if (lines.Length == 1)
             {
-                return evalStringWithVars(input, new Dictionary<string, double>());
+                return EvalStringWithVars(input, new Dictionary<string, double>());
             }
 
             var formula = lines[0];
             var jsonData = String.Join("\r\n", lines.Skip(1));
 
-            return evalStringWithVarsAsJson(formula, jsonData);
+            return EvalStringWithVarsAsJson(formula, jsonData);
             
         }
 
-        public string evalStringWithVarsAsJson(string input, string data)
+        public string EvalStringWithVarsAsJson(string input, string data)
         {
             JObject obj = JObject.Parse(data);
 
@@ -39,19 +39,24 @@ namespace EvalTask
 
             foreach (var prop in obj.Properties())
             {
-                // HACK
-                vars[prop.Name.Replace("_", "SUPER")] = double.Parse(prop.Value.ToString());
+                vars[prop.Name] = double.Parse(prop.Value.ToString());
             }
 
-            return evalStringWithVars(input, vars);
+            return EvalStringWithVars(input, vars);
         }
 
-        public string evalStringWithVars(string input, Dictionary<string, double> vars)
+        public string EvalStringWithVars(string input, Dictionary<string, double> vars)
         {
             // HACK
-            var expr = calc.ParseExpression(input.Replace("_", "SUPER"), vars);
+            var newVars = new Dictionary<string, double>();
+            foreach (var item in vars)
+            {
+                newVars[item.Key.Replace("_", "SUPER")] = item.Value;
+            }
+
+            var expr = calc.ParseExpression(input.Replace("_", "SUPER").Replace(",", "."), newVars);
             var func = expr.Compile();
-            return func().ToString();
+            return func().ToString(CultureInfo.InvariantCulture);
         }
     }
 }
