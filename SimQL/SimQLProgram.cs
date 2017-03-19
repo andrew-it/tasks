@@ -56,12 +56,20 @@ namespace SimQLTask
                                                     'a.x'
                                                 ]
                                             }";
-       
-    [TestCase(jsonData, new[] { "a.b.c = 15", "z = 42", "a.x = 3.14" })]
+
+        [TestCase(jsonData, new[] {"a.b.c = 15", "z = 42", "a.x = 3.14"})]
         public void GetValue_ByQuery(string query, IEnumerable<string> result)
         {
             SimQLProgram.ExecuteQueries(query)
                 .ShouldBeEquivalentTo(result);
+        }
+
+        [Test]
+        public void T()
+        {
+            var input = @"{'data': {a:1}, 'queries' : ['b']}";
+            var actual = SimQLProgram.ExecuteQueries(input);
+
         }
     }
 }
