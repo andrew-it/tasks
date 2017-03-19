@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace EvalTask
 {
@@ -18,7 +19,7 @@ namespace EvalTask
             } else if (lines.Length == 2)
 		    {
 		        var formula = lines[0];
-		        var jsonData = lines[1];
+		        var jsonData = String.Join("", lines.Skip(1));
                 output = evaluator.evalStringWithVarsAsJson(formula, jsonData);
             }
             
