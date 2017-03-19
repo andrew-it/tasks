@@ -1,8 +1,7 @@
-﻿using System;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using NUnit.Framework;
+﻿using EvalTask;
 using FluentAssertions;
+using Newtonsoft.Json;
+using NUnit.Framework;
 
 namespace ConsoleAppChallenge
 {
@@ -12,49 +11,43 @@ namespace ConsoleAppChallenge
     }
 
 
-
     public class JsonConverter : IJsonConverter
     {
         public JsonVer3 ConvertV2toV3(JsonVer2 v2)
         {
             var jsonV3 = new JsonVer3();
             jsonV3.products = new ProductWithId[v2.products.Count];
-            var evaluator = new EvalTask.Evaluator();
+            var evaluator = new Evaluator();
 
             var count = 0;
 
             foreach (var productsKey in v2.products.Keys)
             {
                 double price;
-                if (!Double.TryParse(v2.products[productsKey].price, out price))
-                {
-                    price = Double.Parse(evaluator.EvalStringWithVars(v2.products[productsKey].price, v2.constants));
-                }
+                if (!double.TryParse(v2.products[productsKey].price, out price))
+                    price = double.Parse(evaluator.EvalStringWithVars(v2.products[productsKey].price, v2.constants));
 
                 jsonV3.products[count] = new ProductWithId
-                    {
-                        id = int.Parse(productsKey),
-                        name = v2.products[productsKey].name,
-
-                        price = price,
-                        count = v2.products[productsKey].count
-                    };
+                {
+                    id = int.Parse(productsKey),
+                    name = v2.products[productsKey].name,
+                    price = price,
+                    count = v2.products[productsKey].count
+                };
 
 
                 count++;
-                }
-
-                return jsonV3;
             }
-        }
 
+            return jsonV3;
+        }
+    }
 
 
     [TestFixture]
     public class JsonConverter_Should
     {
-
-        const string v2_01 = @"{
+        private const string v2_01 = @"{
                 'version': '2',
                 'products': {
                     '1': {
@@ -70,22 +63,22 @@ namespace ConsoleAppChallenge
                 }
             }";
 
-        const string v3_01 = @"{
-	            'version': '3',
+        private const string v3_01 = @"{
+                'version': '3',
                 'products': [
                 {
-			        'id': 1,
-			        'name': 'Pen',
-			        'price': 12,
-			        'count': 100
+                    'id': 1,
+                    'name': 'Pen',
+                    'price': 12,
+                    'count': 100
                 },
-		        {
-			        'id': 2,
-			        'name': 'Pencil',
-			        'price': 8,
-			        'count': 1000
-		        }
-	            ]
+                {
+                    'id': 2,
+                    'name': 'Pencil',
+                    'price': 8,
+                    'count': 1000
+                }
+                ]
              }";
 
         private const string v2_02 = @"{
@@ -126,9 +119,5 @@ namespace ConsoleAppChallenge
 
             JsonConvert.SerializeObject(resolut).Should().Be(JsonConvert.SerializeObject(expected));
         }
-
     }
 }
-
-
-
