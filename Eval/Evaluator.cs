@@ -54,7 +54,7 @@ namespace EvalTask
             return EvalStringWithVars(input, vars);
         }
 
-        public double EvalStringWithVarsToDouble(string input, Dictionary<string, double> vars)
+        public string EvalStringWithVars(string input, Dictionary<string, double> vars)
         {
             // HACK
             var newVars = new Dictionary<string, double>();
@@ -65,6 +65,15 @@ namespace EvalTask
 
             var newInput = input.Replace("_", "SUPER").Replace("'", "");
 
+            var normalInput = NormalizeCommas(newInput);
+
+            var expr = calc.ParseExpression(normalInput, newVars);
+            var func = expr.Compile();
+            return func().ToString(CultureInfo.InvariantCulture).Replace("NaN", "error");
+        }
+
+        private static string NormalizeCommas(string newInput)
+        {
             var normalInput = "";
 
             bool inParens = false;
@@ -90,20 +99,11 @@ namespace EvalTask
                 {
                     normalInput += '.';
                     continue;
-                }  
-            
+                }
+
                 normalInput += c;
             }
-
-            var expr = calc.ParseExpression(normalInput, newVars);
-            var func = expr.Compile();
-            return func();
-        }
-
-        public string EvalStringWithVars(string input, Dictionary<string, double> vars)
-        {
-            return EvalStringWithVarsToDouble(input, vars)
-                .ToString(CultureInfo.InvariantCulture);
+            return normalInput;
         }
     }
 }

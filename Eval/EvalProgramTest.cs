@@ -38,9 +38,9 @@ namespace EvalTask
         }
 
         [Test]
-        public void EvalProgram_SqrtOne()
+        public void EvalProgram_SqrtMinusOne()
         {
-            evaluator.EvalString("sqrt(1)").Should().Be("1");
+            evaluator.EvalString("sqrt(-1)").Should().Be("error");
         }
 
         [Test]
